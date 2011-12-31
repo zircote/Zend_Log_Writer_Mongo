@@ -37,7 +37,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
             require_once 'Zend/Log/Exception.php';
             throw new Zend_Log_Exception('MongoDb object is null');
         }
-
+        $event['timestamp'] = new MongoDate(strtotime($event['timestamp']));
         if ($this->_documentMap === null) {
             $dataToInsert = $event;
         } else {
