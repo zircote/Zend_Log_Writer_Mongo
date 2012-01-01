@@ -1,7 +1,12 @@
 <?php
 
 require_once ('Zend/Log/Writer/Abstract.php');
-
+/**
+ * 
+ * 
+ * @author zircote
+ *
+ */
 class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
 {
     /**
@@ -9,7 +14,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
      * 
      * @var MongoCollection
      */
-    protected $_db;
+    protected $_collection;
     /**
      * 
      * 
@@ -19,12 +24,12 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
     /**
      * 
      * 
-     * @param MongoCollection $db
+     * @param MongoCollection $collection
      * @param array $documentMap
      */
-    public function __construct(MongoCollection $db, $documentMap = null)
+    public function __construct(MongoCollection $collection, $documentMap = null)
     {
-        $this->_db = $db;
+        $this->_collection = $collection;
         $this->_documentMap = $documentMap;
     }
     /**
@@ -33,7 +38,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
      */
     protected function _write ($event)
     {
-        if ($this->_db === null) {
+        if ($this->_collection === null) {
             require_once 'Zend/Log/Exception.php';
             throw new Zend_Log_Exception('MongoDb object is null');
         }
@@ -46,7 +51,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
                 $dataToInsert[$columnName] = $event[$fieldKey];
             }
         }
-        $this->_db->save($dataToInsert);
+        $this->_collection->save($dataToInsert);
     }
     /**
      * 
@@ -56,20 +61,18 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
     static public function factory ($config)
     {
         $config = self::_parseConfig($config);
-        $config = array_merge(array(
-            'db'          => null,
-            'collection'  => null,
-            'documentMap' => null,
-        ), $config);
-
+        $config = array_merge(
+            array('collection'  => null,'documentMap' => null), 
+            $config
+        );
         if (isset($config['documentmap'])) {
             $config['documentMap'] = $config['documentmap'];
         }
-        if(!$config['db'] instanceof Mongo){
-            $config['db'] = self::_createMongo($config['db']);
+        if(!$config['collection'] instanceof MongoCollection){
+            $config['collection'] = self::_createMongoCollection($config);
         }
         return new self(
-            $config['db'],
+            $config['collection'],
             $config['documentMap']
         );
     }
@@ -77,21 +80,22 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
      * 
      * 
      * @param array $config
+     * @return MongoCollection
      */
-    static protected function _createMongo($config)
+    static protected function _createMongoCollection($config)
     {
         if(!isset($config['server'])){
             $server  = "mongodb://localhost:27017";
         } else {
             $server = $config['server'];
         }
-        if(!isset($config['options']) || !is_array($config['db']['options'])){
+        if(!isset($config['options']) || !is_array($config['options'])){
             $options = array();
         } else {
             $options = $config['options'];
         }
         $mongo = new Mongo($server, $options);
-        $database = $mongo->selectDB($config['database']);
-        return $database->selectCollection($config['collection']);
+        return $mongo->selectDB($config['database'])
+            ->selectCollection($config['collection']);
     }
 }
