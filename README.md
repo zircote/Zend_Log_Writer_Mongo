@@ -60,3 +60,17 @@
     $log->addWriter($writer);
     $log->err(__METHOD__);
 ```
+#### Resulting Document
+```javascript
+{
+    "_id": {
+        "$oid": "4effb7b46be1326d37000000"
+    },
+    "timestamp": {
+        "$date": "2012-01-01T01:32:36.000Z"
+    },
+    "message": "this is a test MongoLogTest::testWrite2",
+    "priority": 6,
+    "priorityName": "INFO"
+}
+```
