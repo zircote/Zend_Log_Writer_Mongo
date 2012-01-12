@@ -2,28 +2,33 @@
 
 require_once ('Zend/Log/Writer/Abstract.php');
 /**
- * 
- * 
+ *
+ *
  * @author zircote
  *
  */
 class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
 {
     /**
-     * 
-     * 
+     *
+     *
      * @var MongoCollection
      */
     protected $_collection;
     /**
-     * 
-     * 
+     *
+     *
      * @var array
      */
     protected $_documentMap;
     /**
-     * 
-     * 
+     * Originating hostname of the log entry.
+     * @var string
+     */
+    protected $_hostname;
+    /**
+     *
+     *
      * @param MongoCollection $collection
      * @param array $documentMap
      */
@@ -38,6 +43,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
      */
     protected function _write ($event)
     {
+        $event['hostname'] = $this->_hostname;
         if ($this->_collection === null) {
             require_once 'Zend/Log/Exception.php';
             throw new Zend_Log_Exception('MongoDb object is null');
@@ -54,15 +60,15 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
         $this->_collection->save($dataToInsert);
     }
     /**
-     * 
-     * 
+     *
+     *
      * @param array $config
      */
     static public function factory ($config)
     {
         $config = self::_parseConfig($config);
         $config = array_merge(
-            array('collection'  => null,'documentMap' => null), 
+            array('collection'  => null,'documentMap' => null),
             $config
         );
         if (isset($config['documentmap'])) {
@@ -77,8 +83,8 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
         );
     }
     /**
-     * 
-     * 
+     *
+     *
      * @param array $config
      * @return MongoCollection
      */
@@ -97,5 +103,11 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
         $mongo = new Mongo($server, $options);
         return $mongo->selectDB($config['database'])
             ->selectCollection($config['collection']);
+    }
+    protected function _setHostname()
+    {
+        if(!$this->_hostname){
+            $this->_hostname = php_uname('n');
+        }
     }
 }
