@@ -36,6 +36,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
     {
         $this->_collection = $collection;
         $this->_documentMap = $documentMap;
+        $this->_setHostname();
     }
     /**
      * (non-PHPdoc)
@@ -57,7 +58,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
                 $dataToInsert[$columnName] = $event[$fieldKey];
             }
         }
-        $this->_collection->save($dataToInsert);
+        $this->_collection->insert($dataToInsert);
     }
     /**
      *
@@ -67,8 +68,13 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
     static public function factory ($config)
     {
         $config = self::_parseConfig($config);
+
+        if (isset($config['columnmap'])) {
+            $config['columnMap'] = $config['columnmap'];
+        }
         $config = array_merge(
-            array('collection'  => null,'documentMap' => null),
+            array('collection'  => null,
+            'documentMap' => null),
             $config
         );
         if (isset($config['documentmap'])) {

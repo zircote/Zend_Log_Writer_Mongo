@@ -1,6 +1,20 @@
 # Zend_Log_Writer_Mongo
 
 ### Uses
+```
+resources.log.mongo.writerName = "Mongo"
+resources.log.mongo.writerParams.database = "pincrowd"
+resources.log.mongo.writerParams.collection = "logging"
+resources.log.mongo.writerParams.documentMap.timestamp = 'timestamp'
+resources.log.mongo.writerParams.documentMap.message = 'message'
+resources.log.mongo.writerParams.documentMap.priority = 'priority'
+resources.log.mongo.writerParams.documentMap.priorityName = 'priorityName'
+resources.log.mongo.writerParams.documentMap.hostname = 'hostname'
+resources.log.mongo.filterName = "Priority"
+resources.log.mongo.filterParams.priority = 5
+
+```
+
 #### `Zend_Log::factory`
 ```php
 <?php
