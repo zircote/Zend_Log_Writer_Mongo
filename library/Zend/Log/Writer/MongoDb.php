@@ -7,7 +7,7 @@ require_once ('Zend/Log/Writer/Abstract.php');
  * @author zircote
  *
  */
-class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
+class Zend_Log_Writer_MongoDb extends Zend_Log_Writer_Abstract
 {
     /**
      *
@@ -106,7 +106,7 @@ class Zend_Log_Writer_Mongo extends Zend_Log_Writer_Abstract
         } else {
             $options = $config['options'];
         }
-        $mongo = new Mongo($server, $options);
+        $mongo = new MongoDb($server, $options);
         return $mongo->selectDB($config['database'])
             ->selectCollection($config['collection']);
     }
