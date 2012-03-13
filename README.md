@@ -88,3 +88,24 @@ resources.log.mongo.filterParams.priority = 5
     "priorityName": "INFO"
 }
 ```
+
+#### Reading from the log with a tailable cursor:
+
+```php
+<?php
+
+// db.createCollection("logCollection", {capped:true, size:100000})
+
+$mongo = new Mongo();
+$db = $mongo->selectDB('logging');
+$collection = $db->selectCollection('logCollection');
+$cursor = $collection->find()->tailable(true);
+while (true) {
+    if ($cursor->hasNext()) {
+        $doc = $cursor->getNext();
+        echo date(DATE_ISO8601, $doc['timestamp']->sec), ' ',$doc['priorityName'],' ', $doc['message'], PHP_EOL;
+    } else {
+        usleep(100);
+    }
+}
+```
