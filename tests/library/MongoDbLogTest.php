@@ -1,5 +1,5 @@
 <?php
-class MongoLogTest extends PHPUnit_Framework_TestCase
+class MongoDbLogTest extends PHPUnit_Framework_TestCase
 {
     public function testWrite()
     {
@@ -7,7 +7,7 @@ class MongoLogTest extends PHPUnit_Framework_TestCase
         'collection' => 'log',
         'database' => 'zend_log'
         );
-        $writer = Zend_Log_Writer_Mongo::factory($config);
+        $writer = Zend_Log_Writer_MongoDb::factory($config);
         $log = new Zend_log();
         $log->addWriter($writer);
         $log->info('this is a test');
@@ -20,7 +20,7 @@ class MongoLogTest extends PHPUnit_Framework_TestCase
         'password' => 'somepassword', 'connect' => true, 'timeout' => 200, 
         'replicaSet' => 'repset1', 'db' => 'zend_log'));
         $log = new Zend_log();
-        $log->addWriter(Zend_Log_Writer_Mongo::factory($config));
+        $log->addWriter(Zend_Log_Writer_MongoDb::factory($config));
         $log->info('this is a test ' . __METHOD__);
     }
     public function testZendLog ()
@@ -51,7 +51,7 @@ class MongoLogTest extends PHPUnit_Framework_TestCase
         $collection = $mongo->selectDB('logging')
             ->selectCollection('logCollection');
         $log = new Zend_log();
-        $writer = new Zend_Log_Writer_Mongo($collection);
+        $writer = new Zend_Log_Writer_MongoDb($collection);
         $log->addWriter($writer);
         $log->err(__METHOD__);
     }
