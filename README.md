@@ -1,6 +1,7 @@
 # Zend_Log_Writer_MongoDb
 
 ### Uses
+
 ```php
 resources.log.mongo.writerName = "MongoDb"
 resources.log.mongo.writerParams.database = "pincrowd"
@@ -19,9 +20,11 @@ if($bootstrap->hasResource('log')){
     $log->info('log me');
 }
 ```
+
 ### Full config via `Zend_Log::factory`
 
 ```php
+<?php
 $logger = Zend_Log::factory(
     array(
         'timestampFormat' => 'Y-m-d',
@@ -45,6 +48,7 @@ $logger = Zend_Log::factory(
 );
 $logger->crit(__METHOD__);
 ```
+
 ### Extended config via `Zend_Log_Writer_MongoDb::factory`
 
 ```php
@@ -65,6 +69,7 @@ $log = new Zend_log();
 $log->addWriter(Zend_Log_Writer_MongoDb::factory($config));
 $log->info('this is a test ' . __METHOD__);
 ```
+
 ### Using the Writer Factory Method:
 
 ```php
@@ -95,7 +100,7 @@ $log->err(__METHOD__);
 ### An Example Logged Document
 
 ```javascript
-/*
+
 {
     "_id" : ObjectId("4f5fa1546be132029900009e"),
     "timestamp" : ISODate("2012-03-13T19:34:44Z"),
@@ -104,7 +109,7 @@ $log->err(__METHOD__);
     "priorityName" : "ERR",
     "hostname" : "zircote-mbp-4.local"
 }
- */
+
 
 ```
 
