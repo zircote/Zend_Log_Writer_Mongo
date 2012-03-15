@@ -1,8 +1,8 @@
-# Zend_Log_Writer_Mongo
+# Zend_Log_Writer_MongoDb
 
 ### Uses
 ```
-resources.log.mongo.writerName = "Mongo"
+resources.log.mongo.writerName = "MongoDb"
 resources.log.mongo.writerParams.database = "pincrowd"
 resources.log.mongo.writerParams.collection = "logging"
 resources.log.mongo.writerParams.documentMap.timestamp = 'timestamp'
@@ -20,7 +20,7 @@ resources.log.mongo.filterParams.priority = 5
 <?php
     $logger = Zend_Log::factory(
     array('timestampFormat' => 'Y-m-d', 
-    array('writerName' => 'Mongo', 
+    array('writerName' => 'MongoDb', 
     'writerParams' => array(
         'server' => 'mongodb://somehost.mongolab.com:27017', 
         'collection' => 'logging', 'database' => 'zend_log', 
@@ -38,7 +38,7 @@ resources.log.mongo.filterParams.priority = 5
     );
     $logger->crit(__METHOD__);
 ```
-#### `Zend_Log_Writer_Mongo::factory` with `Mongo` options
+#### `Zend_Log_Writer_MongoDb::factory` with `MongoDb` options
 ```php
 <?php
 
@@ -48,29 +48,29 @@ resources.log.mongo.filterParams.priority = 5
     'password' => 'somepassword', 'connect' => true, 'timeout' => 200, 
     'replicaSet' => 'repset1', 'db' => 'zend_log'));
     $log = new Zend_log();
-    $log->addWriter(Zend_Log_Writer_Mongo::factory($config));
+    $log->addWriter(Zend_Log_Writer_MongoDb::factory($config));
     $log->info('this is a test ' . __METHOD__);
 ```
-#### Zend_Log_Writer_Mongo::factory 
+#### Zend_Log_Writer_MongoDb::factory 
 ```php
 <?php
     $config = array(
     'collection' => 'log',
     'database' => 'pincrowd'
     );
-    $writer = Zend_Log_Writer_Mongo::factory($config);
+    $writer = Zend_Log_Writer_MongoDb::factory($config);
     $log = new Zend_log();
     $log->addWriter($writer);
     $log->info('this is a test');
 ```
-#### Zend_Log_Writer_Mongo::__construct
+#### Zend_Log_Writer_MongoDb::__construct
 ```php
 <?php
-    $mongo = new Mongo();
+    $mongo = new MongoDb();
     $collection = $mongo->selectDB('logging')
         ->selectCollection('logCollection');
     $log = new Zend_log();
-    $writer = new Zend_Log_Writer_Mongo($collection);
+    $writer = new Zend_Log_Writer_MongoDb($collection);
     $log->addWriter($writer);
     $log->err(__METHOD__);
 ```
@@ -83,7 +83,7 @@ resources.log.mongo.filterParams.priority = 5
     "timestamp": {
         "$date": "2012-01-01T01:32:36.000Z"
     },
-    "message": "this is a test MongoLogTest::testWrite2",
+    "message": "this is a test MongoDbLogTest::testWrite2",
     "priority": 6,
     "priorityName": "INFO"
 }
