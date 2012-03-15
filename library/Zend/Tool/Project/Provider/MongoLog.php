@@ -96,17 +96,19 @@ class Zend_Tool_Project_Provider_MongoLog extends Zend_Tool_Project_Provider_Abs
      * zf tail log -h 'some-host.cloud.com' -f 'somebad thing happened' -e production
      * </code>
      *
-     * @todo Make it aware of the document map and the logwriter
-     *
      * @param string $filter text to filter the logs by
      * @param server $hostname comma seperated lists of servers to return logs for
+     * @param int $priority The log priority to filter the tail on
      * @param string $env project environment by which the configs are loaded
      */
-    public function tail($filter = null, $hostname = null, $env = 'development')
+    public function tail($filter = null, $hostname = null, $priority = null, $env = 'development')
     {
         $_f = array();
         if($filter){
             $_f['message'] = array('$regex' => sprintf('%s', $filter));
+        }
+        if((int)$priority > 0 && (int)$priority < 8){
+            $_f['priority'] = array( '$lte' => (int) $priority);
         }
         if($hostname){
             $hosts = explode(',', $hostname);
